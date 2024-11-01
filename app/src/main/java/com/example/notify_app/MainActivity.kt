@@ -43,6 +43,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     NotifyappTheme {
-
+        Greeting("Collaborator")
     }
 }
