@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -50,6 +51,19 @@ android {
 }
 
 dependencies {
+
+    // ---------- ROOM ----------------------
+    implementation(libs.androidx.room.runtime)
+    //other examples use kapt but docs say room requires KSP, is an annotation processor? I think
+    ksp("androidx.room:room-compiler:2.5.0")
+    implementation("androidx.room:room-ktx:2.5.0")
+    androidTestImplementation(libs.androidx.room.runtime)
+
+    // --------- COMPOSE NAVIGATION ---------
+    implementation(libs.androidx.navigation.compose)
+
+    // --------- MATERIAL ICON --------------
+    implementation(libs.androidx.material.icons.extended)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
