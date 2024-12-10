@@ -19,6 +19,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "SPOTIFY_CLIENT_ID", project.properties["spotify_client_id"].toString())
+        buildConfigField("String", "SPOTIFY_CLIENT_SECRET", project.properties["spotify_client_secret"].toString())
     }
 
     buildTypes {
@@ -39,6 +42,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -58,6 +62,10 @@ dependencies {
     ksp("androidx.room:room-compiler:2.5.0")
     implementation("androidx.room:room-ktx:2.5.0")
     androidTestImplementation(libs.androidx.room.runtime)
+
+    // ---------- RETROFIT ------------------
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 
     // --------- COMPOSE NAVIGATION ---------
     implementation(libs.androidx.navigation.compose)

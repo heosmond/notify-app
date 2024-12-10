@@ -1,7 +1,10 @@
 package com.example.notify_app.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.notify_app.api.SpotifyRepository
 import com.example.notify_app.data.Note
 import com.example.notify_app.data.NoteDao
 import com.example.notify_app.events.NoteEvent
@@ -21,7 +24,8 @@ import kotlinx.coroutines.launch
 *  !!research data caching methods with room to see how this is done*/
 
 class NotesViewModel(private val dao: NoteDao) : ViewModel() {
-    //get request but DB
+    // DATABASE
+    //like a get request but for notes from DB
     private val isSortedByDate = MutableStateFlow(true)
 
     //flip how notes are sorted, I think there's a better way to do this
@@ -44,6 +48,20 @@ class NotesViewModel(private val dao: NoteDao) : ViewModel() {
             notes = notes,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), NoteState())
+
+
+    // API
+    private val repository = SpotifyRepository()
+
+    private val _accessToken = MutableLiveData<String?>()
+    val accessToken: MutableLiveData<String?> get() = _accessToken
+
+    fun getAccessToken() {
+        viewModelScope.launch {
+            val token = repository.fetchAccessToken()
+            _accessToken.postValue(token)
+        }
+    }
 
 
     fun onEvent(event: NoteEvent) {
