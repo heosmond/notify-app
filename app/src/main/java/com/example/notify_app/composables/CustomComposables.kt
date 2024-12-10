@@ -23,13 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.example.notify_app.R
 import com.example.notify_app.ui.theme.NotifyappTheme
 
-/* Individual components included in screens
-*  Completed:
-*   - JournalCard
-*
-*   TODO:
-*    - Search bar (requires viewModel - directly query room db?)
-*    - lazy card rendering */
 
 data class JournalCardData (
     @DrawableRes val img: Int,

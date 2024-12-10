@@ -26,10 +26,9 @@ import com.example.notify_app.ui.screens.AddNotesScreen
 import com.example.notify_app.ui.screens.NotesScreen
 import com.example.notify_app.viewmodel.NotesViewModel
 
-//initial commit
+
 class MainActivity : ComponentActivity() {
 
-    //create instance of database here, not enough time to figure out hilt i(don't ask how much I spent on that)
     private val db by lazy {
         Room.databaseBuilder(
             applicationContext,
@@ -48,9 +47,24 @@ class MainActivity : ComponentActivity() {
         }
     )
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // Fetch the Spotify access token during initialization
+        viewModel.getAccessToken()
+
+        // Observe the access token for debugging
+        viewModel.accessToken.observe(this) { token ->
+            if (token != null) {
+                //SUCCESS!! I can see the token when I run the program :)
+                println("Access Token fetched successfully: $token")
+            } else {
+                println("Failed to fetch Access Token")
+            }
+        }
+
         setContent {
             NotifyappTheme {
                 Surface(
