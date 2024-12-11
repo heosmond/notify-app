@@ -79,7 +79,7 @@ fun NotesScreen(
 
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                navController.navigate("AddNotesScreen")
+                navController.navigate("SearchTrackScreen")
             }) {
                 Icon(
                     imageVector = Icons.Rounded.Add,

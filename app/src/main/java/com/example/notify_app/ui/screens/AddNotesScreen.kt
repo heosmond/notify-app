@@ -29,7 +29,7 @@ fun AddNotesScreen(
             FloatingActionButton(
                 onClick = {
                     onEvent(NoteEvent.SaveNote)
-                    navController.popBackStack()
+                    navController.navigate("NotesScreen")
               },
             ){
                 Icon(imageVector = Icons.Rounded.Check, contentDescription = "Save Note")

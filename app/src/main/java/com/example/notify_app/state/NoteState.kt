@@ -1,6 +1,7 @@
 package com.example.notify_app.state
 
-import androidx.compose.runtime.mutableStateOf
+import com.example.notify_app.api.data.SearchResponse
+import com.example.notify_app.api.data.Track
 import com.example.notify_app.data.Note
 
 data class NoteState(
@@ -14,5 +15,8 @@ data class NoteState(
     val imagePath: String = "",
     val searchQuery: String = "",
     val isSearching: Boolean = false,
-    val editingNote: Note? = null
+    val editingNote: Note? = null,
+    val selectedTrack: Track? = null, // Add selectedTrack field
+    val searchResults: SearchResponse? = null
+
 )

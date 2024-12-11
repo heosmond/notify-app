@@ -24,6 +24,7 @@ import com.example.notify_app.ui.theme.NotifyappTheme
 import com.example.notify_app.data.NotesDatabase
 import com.example.notify_app.ui.screens.AddNotesScreen
 import com.example.notify_app.ui.screens.NotesScreen
+import com.example.notify_app.ui.screens.SearchTrackScreen
 import com.example.notify_app.viewmodel.NotesViewModel
 
 
@@ -46,7 +47,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     )
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +77,13 @@ class MainActivity : ComponentActivity() {
                     NavHost(navController = navController, startDestination = "NotesScreen") {
                         composable("NotesScreen") {
                             NotesScreen(
+                                state = state.value,
+                                navController = navController,
+                                onEvent = viewModel::onEvent
+                            )
+                        }
+                        composable("SearchTrackScreen") {
+                            SearchTrackScreen(
                                 state = state.value,
                                 navController = navController,
                                 onEvent = viewModel::onEvent
