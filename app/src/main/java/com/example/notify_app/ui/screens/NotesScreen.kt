@@ -2,6 +2,7 @@ package com.example.notify_app.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -101,7 +102,8 @@ fun NotesScreen(
             items(state.notes.size) { index ->
                 NoteCard(
                     note = state.notes[index],
-                    onDelete = { onEvent(NoteEvent.DeleteNote(state.notes[index])) }
+                    onDelete = { onEvent(NoteEvent.DeleteNote(state.notes[index])) },
+                    onClick = { navController.navigate("ViewNoteScreen/${index}") }
                 )
             }
         }
@@ -113,7 +115,8 @@ fun NotesScreen(
 @Composable
 fun NoteCard(
     note: Note,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onClick: () -> Unit
 ){
     ElevatedCard(
         colors = CardDefaults.cardColors(
@@ -124,7 +127,8 @@ fun NoteCard(
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable( onClick = { onClick() }),
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(
@@ -173,22 +177,22 @@ fun NoteCard(
     }
 }
 
-@Preview
-@Composable
-fun NotesScreenPreview() {
-    NoteCard(
-        note = Note(
-            title = "heelo",
-            song = "song",
-            artist = "artist",
-            content = "content",
-            genre = "wuw",
-            imagePath = "https://i.scdn.co/image/ab67616d000048518b72243c4bf2544e00183e1d",
-            lastModified = System.currentTimeMillis(),
-            year = "year"
-        ),
-        onDelete = {}
-
-    )
-}
+//@Preview
+//@Composable
+//fun NotesScreenPreview() {
+//    NoteCard(
+//        note = Note(
+//            title = "heelo",
+//            song = "song",
+//            artist = "artist",
+//            content = "content",
+//            genre = "wuw",
+//            imagePath = "https://i.scdn.co/image/ab67616d000048518b72243c4bf2544e00183e1d",
+//            lastModified = System.currentTimeMillis(),
+//            year = "year"
+//        ),
+//        onDelete = {}
+//
+//    )
+//}
 

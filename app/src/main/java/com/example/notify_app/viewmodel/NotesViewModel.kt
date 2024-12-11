@@ -1,6 +1,7 @@
 package com.example.notify_app.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -61,12 +62,6 @@ class NotesViewModel(private val dao: NoteDao) : ViewModel() {
     private val _accessToken = MutableLiveData<String?>()
     val accessToken: MutableLiveData<String?> get() = _accessToken
 
-    private val _searchResults = MutableStateFlow(SearchResponse(tracks = Tracks(tracks = emptyList())))
-    val searchResults: StateFlow<SearchResponse> get() = _searchResults
-
-    private val _selectedTrack = MutableStateFlow<Track?>(null)
-    val selectedTrack: StateFlow<Track?> get() = _selectedTrack
-
     fun getAccessToken() {
         viewModelScope.launch {
             val token = repository.fetchAccessToken()
@@ -77,7 +72,9 @@ class NotesViewModel(private val dao: NoteDao) : ViewModel() {
         viewModelScope.launch {
             try {
                 if (query.isBlank()) {
-                    _searchResults.value = SearchResponse(tracks = Tracks(tracks = emptyList()))
+                    _state.update {
+                        it.copy(searchResults = SearchResponse(tracks = Tracks(tracks = emptyList())))
+                    }
                     return@launch
                 }
 
@@ -95,21 +92,23 @@ class NotesViewModel(private val dao: NoteDao) : ViewModel() {
                 } else {
                     // Handle case where no tracks were found or returned
                     Log.d("SearchTracks", "No tracks found for query: $query")
-                    _searchResults.value = SearchResponse(tracks = Tracks(tracks = emptyList()))
+                    _state.update {
+                        it.copy(searchResults = SearchResponse(tracks = Tracks(tracks = emptyList())))
+                    }
                 }
             } catch (e: Exception) {
                 // Handle error (e.g., network failure)
                 Log.e("SearchTracks", "Error occurred during search: ${e.message}", e)
-                _searchResults.value = SearchResponse(tracks = Tracks(tracks = emptyList()))
+                _state.update {
+                    it.copy(searchResults = SearchResponse(tracks = Tracks(tracks = emptyList())))
+                }
             }
         }
-    }
-    fun selectTrack(track: Track) {
-        _selectedTrack.value = track
     }
     fun getArtistNames(track: Track): String {
         return track.artists.joinToString(", ") { it.name }
     }
+
 
     fun onEvent(event: NoteEvent) {
         when (event) {
@@ -143,7 +142,7 @@ class NotesViewModel(private val dao: NoteDao) : ViewModel() {
                     lastModified = System.currentTimeMillis()
                 )
                 viewModelScope.launch {
-                    dao.upsertNote(note)
+                    state.value.id = dao.upsertNote(note)
                 }
                 //resets state after saving note
                 _state.update {
@@ -155,6 +154,7 @@ class NotesViewModel(private val dao: NoteDao) : ViewModel() {
                         genre = "",
                         content = "",
                         imagePath = "",
+                        id = 0
                     )
                 }
             }
