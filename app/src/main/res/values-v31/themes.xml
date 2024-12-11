@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Notifyapp" parent="android:Theme.Material.Light.NoActionBar" />
-
     <style name="Theme.Notifyapp.Starting" parent="Theme.Notifyapp">
         <item name="windowSplashScreenBackground">@color/black</item>
         <item name="postSplashScreenTheme">@style/Theme.Notifyapp</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/animated_logo</item>
     </style>
 </resources>

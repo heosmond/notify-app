@@ -17,6 +17,7 @@ data class NoteState(
     val isSearching: Boolean = false,
     val editingNote: Note? = null,
     val selectedTrack: Track? = null, // Add selectedTrack field
-    val searchResults: SearchResponse? = null
+    val searchResults: SearchResponse? = null,
+    var id: Long = 0
 
 )

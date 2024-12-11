@@ -13,7 +13,7 @@ interface NoteDao {
 
     //attempts insert, if conflict it will update
     @Upsert
-    suspend fun upsertNote(note: Note)
+    suspend fun upsertNote(note: Note) : Long
 
     @Delete
     suspend fun deleteNote(note: Note)
@@ -24,7 +24,6 @@ interface NoteDao {
     @Query("SELECT * FROM note ORDER BY title DESC")
     fun getNotesOrderedByTitle(): Flow<List<Note>>
 
-    //search functionality in app
-    @Query("SELECT * FROM note WHERE note.title LIKE ('%' || :query || '%') OR note.content LIKE ('%' || :query || '%')")
-    fun getNotesFromQuery(query: String): Flow<List<Note>>
+    @Query("SELECT * FROM note WHERE id = :noteId")
+    suspend fun getNoteById(noteId: Long): Note?
 }

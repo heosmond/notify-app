@@ -58,6 +58,7 @@ dependencies {
 
     // ---------- ROOM ----------------------
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.runtime.livedata)
     //other examples use kapt but docs say room requires KSP, is an annotation processor? I think
     ksp("androidx.room:room-compiler:2.5.0")
     implementation("androidx.room:room-ktx:2.5.0")
@@ -72,6 +73,11 @@ dependencies {
 
     // --------- MATERIAL ICON --------------
     implementation(libs.androidx.material.icons.extended)
+
+    // --------- COIL -----------------------
+    implementation(libs.coil.compose)
+
+    implementation(libs.androidx.core.splashscreen)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

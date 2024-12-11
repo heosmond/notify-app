@@ -1,5 +1,6 @@
 package com.example.notify_app
 
+import ViewNoteScreen
 import android.media.Image
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,17 +12,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.room.Room
 import com.example.notify_app.ui.theme.NotifyappTheme
 import com.example.notify_app.data.NotesDatabase
+import com.example.notify_app.ui.customTheme.SpotifyTheme
 import com.example.notify_app.ui.screens.AddNotesScreen
 import com.example.notify_app.ui.screens.NotesScreen
 import com.example.notify_app.ui.screens.SearchTrackScreen
@@ -50,6 +56,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         enableEdgeToEdge()
 
         // Fetch the Spotify access token during initialization
@@ -66,11 +73,12 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            NotifyappTheme {
+            SpotifyTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+
                     val state = viewModel.state.collectAsState()
                     val navController = rememberNavController()
 
@@ -88,6 +96,21 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                                 onEvent = viewModel::onEvent
                             )
+                        }
+                        composable(
+                            route = "ViewNoteScreen/{noteId}",
+                            arguments = listOf(navArgument("noteId") { type = NavType.IntType })
+                        ) { backStackEntry ->
+                            val noteId = backStackEntry.arguments?.getInt("noteId")
+                            val note = state.value.notes.find { it.id == noteId }
+                            noteId?.let {
+                                ViewNoteScreen(
+                                    navController = navController,
+                                    selectedNoteId = noteId,
+                                    state = state.value,
+//                                    onEvent = viewModel::onEvent
+                                )
+                            }
                         }
                         composable("AddNotesScreen") {
                             AddNotesScreen(
