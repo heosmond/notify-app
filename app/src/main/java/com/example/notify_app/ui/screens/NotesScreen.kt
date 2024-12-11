@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Sort
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Sort
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -34,21 +36,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 
 import androidx.compose.ui.unit.dp
 import com.example.notify_app.R
-import com.example.notify_app.composables.JournalCardData
+import com.example.notify_app.composables.DisplayImage
+import com.example.notify_app.data.Note
 import com.example.notify_app.events.NoteEvent
 import com.example.notify_app.state.NoteState
 
 @Composable
 fun NotesScreen(
-    //need controller, state and events
     state: NoteState,
     navController: NavController,
     onEvent: (NoteEvent) -> Unit
-){
-    Scaffold (
+) {
+    Scaffold(
         topBar = {
             Row(
                 modifier = Modifier
@@ -66,7 +69,7 @@ fun NotesScreen(
                     color = MaterialTheme.colorScheme.onPrimary
                 )
 
-                IconButton(onClick = {onEvent(NoteEvent.SortNotes)}) {
+                IconButton(onClick = { onEvent(NoteEvent.SortNotes) }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.Sort,
                         contentDescription = "Sort Notes",
@@ -96,20 +99,21 @@ fun NotesScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(state.notes.size) { index ->
-                NoteCard(state = state, index = index)
+                NoteCard(
+                    note = state.notes[index],
+                    onDelete = { onEvent(NoteEvent.DeleteNote(state.notes[index])) }
+                )
             }
         }
-
     }
-
 }
 
 
 
 @Composable
 fun NoteCard(
-    state: NoteState,
-    index: Int,
+    note: Note,
+    onDelete: () -> Unit
 ){
     ElevatedCard(
         colors = CardDefaults.cardColors(
@@ -126,34 +130,65 @@ fun NoteCard(
         Row(
             Modifier.padding(16.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.placeholder),//TODO get image from save location
+            DisplayImage(
+                imageUrl = note.imagePath,
+                localFallbackImage = R.drawable.placeholder,
                 contentDescription = null,
-                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(100.dp)
             )
             Spacer(Modifier.width(16.dp))
             Column() {
                 Text(
-                    text = state.notes[index].title,
+                    text = note.title,
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    text = state.notes[index].song,
+                    text = note.song,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Text(
-                    text = state.notes[index].artist,
+                    text = note.artist,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
+
+        }
+        IconButton(
+            onClick = onDelete,
+            modifier = Modifier
+                .align(Alignment.End)
+                .absoluteOffset(x = (-8).dp, y = (-8).dp)
+        ) {
+            Icon(
+                imageVector = Icons.Rounded.Delete,
+                contentDescription = "Delete Note",
+                tint = MaterialTheme.colorScheme.error
+            )
         }
 
     }
 }
 
+@Preview
+@Composable
+fun NotesScreenPreview() {
+    NoteCard(
+        note = Note(
+            title = "heelo",
+            song = "song",
+            artist = "artist",
+            content = "content",
+            genre = "wuw",
+            imagePath = "https://i.scdn.co/image/ab67616d000048518b72243c4bf2544e00183e1d",
+            lastModified = System.currentTimeMillis(),
+            year = "year"
+        ),
+        onDelete = {}
 
+    )
+}
 

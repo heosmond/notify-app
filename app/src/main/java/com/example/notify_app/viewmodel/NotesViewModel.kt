@@ -114,7 +114,6 @@ class NotesViewModel(private val dao: NoteDao) : ViewModel() {
     fun onEvent(event: NoteEvent) {
         when (event) {
             is NoteEvent.DeleteNote -> {
-                //process: just get rid of it! It'll be fine! (it actually is fine)
                 viewModelScope.launch {
                     dao.deleteNote(event.note)
                 }
@@ -126,6 +125,7 @@ class NotesViewModel(private val dao: NoteDao) : ViewModel() {
                 val song = state.value.song
                 val artist = state.value.artist
                 val year = state.value.year
+                val imagePath = state.value.imagePath
 
                 //No blank fields
                 if (title.isBlank() || content.isBlank()) {
@@ -139,7 +139,7 @@ class NotesViewModel(private val dao: NoteDao) : ViewModel() {
                     year = year,
                     genre = "unknown",//todo remove
                     content = content,
-                    imagePath = "R.drawable.placeholder.jpg", //todo save image url - req different rendering method
+                    imagePath = imagePath, //todo save image url - req different rendering method
                     lastModified = System.currentTimeMillis()
                 )
                 viewModelScope.launch {
@@ -177,7 +177,8 @@ class NotesViewModel(private val dao: NoteDao) : ViewModel() {
                     it.copy(selectedTrack = event.track,
                         song = event.track.name,
                         artist = getArtistNames(event.track),
-                        year = event.track.album.release_date,)//todo image update
+                        year = event.track.album.release_date,
+                        imagePath = event.track.album.images[1].url)//300x300 album cover
                 }
             }
             is NoteEvent.SearchTracks -> {

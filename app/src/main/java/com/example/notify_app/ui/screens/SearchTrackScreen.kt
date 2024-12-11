@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -32,13 +33,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.notify_app.api.data.Track
-import com.example.notify_app.composables.JournalCardData
 import com.example.notify_app.events.NoteEvent
 import com.example.notify_app.state.NoteState
 import com.example.notify_app.viewmodel.NotesViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import com.example.notify_app.composables.DisplayImage
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
@@ -117,11 +118,12 @@ fun TrackItem(track: Track, onClick: () -> Unit){
         Row(
             Modifier.padding(16.dp)
         ) {
-//            Image(
-//                painter = painterResource(id = data.img),
-//                contentDescription = null,
-//                contentScale = ContentScale.Crop,
-//            )
+            DisplayImage(
+                imageUrl = track.album.images[0].url,
+                localFallbackImage = com.example.notify_app.R.drawable.placeholder,
+                contentDescription = null,
+                modifier = Modifier.size(60.dp)
+            )
             Spacer(Modifier.width(16.dp))
             Column {
                 Text(track.name, style = MaterialTheme.typography.titleSmall)
