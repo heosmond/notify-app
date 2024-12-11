@@ -103,7 +103,7 @@ fun NotesScreen(
                 NoteCard(
                     note = state.notes[index],
                     onDelete = { onEvent(NoteEvent.DeleteNote(state.notes[index])) },
-                    onClick = { navController.navigate("ViewNoteScreen/${index}") }
+                    onClick = { navController.navigate("ViewNoteScreen/${state.notes[index].id}") }
                 )
             }
         }
@@ -141,7 +141,9 @@ fun NoteCard(
                 modifier = Modifier.size(100.dp)
             )
             Spacer(Modifier.width(16.dp))
-            Column() {
+            Column (
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(
                     text = note.title,
                     style = MaterialTheme.typography.titleSmall,
@@ -158,21 +160,22 @@ fun NoteCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
+                IconButton(
+                    onClick = onDelete,
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .absoluteOffset(x = (-2).dp, y = (-2).dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Delete,
+                        contentDescription = "Delete Note",
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
             }
 
         }
-        IconButton(
-            onClick = onDelete,
-            modifier = Modifier
-                .align(Alignment.End)
-                .absoluteOffset(x = (-8).dp, y = (-8).dp)
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Delete,
-                contentDescription = "Delete Note",
-                tint = MaterialTheme.colorScheme.error
-            )
-        }
+
 
     }
 }

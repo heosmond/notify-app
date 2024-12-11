@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -97,15 +98,20 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(
-                                route = "ViewNoteScreen/{noteId}",
-                        arguments = listOf(navArgument("noteId") { type = NavType.LongType })
+                            route = "ViewNoteScreen/{noteId}",
+                            arguments = listOf(navArgument("noteId") { type = NavType.IntType })
                         ) { backStackEntry ->
-                        val noteId = backStackEntry.arguments?.getLong("noteId")
-                        val note = state.value.notes.find { it.id.toLong() == noteId }
-                        if (note != null) {
-                            ViewNoteScreen(note, navController)
+                            val noteId = backStackEntry.arguments?.getInt("noteId")
+                            val note = state.value.notes.find { it.id == noteId }
+                            noteId?.let {
+                                ViewNoteScreen(
+                                    navController = navController,
+                                    selectedNoteId = noteId,
+                                    state = state.value,
+//                                    onEvent = viewModel::onEvent
+                                )
+                            }
                         }
-                    }
                         composable("AddNotesScreen") {
                             AddNotesScreen(
                                 state = state.value,

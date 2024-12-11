@@ -24,18 +24,12 @@ import kotlinx.coroutines.launch
 import com.example.notify_app.api.data.Tracks
 
 
-/* !!ViewModel handles events and data changes!!
-* TODO: Consider approach to connecting data gotten from API to the
-*  Dao fields, I think we just need to plug the values into here
-*  !!research data caching methods with room to see how this is done*/
-
 class NotesViewModel(private val dao: NoteDao) : ViewModel() {
     // DATABASE
     //like a get request but for notes from DB
     private val isSortedByDate = MutableStateFlow(true)
 
     //flip how notes are sorted, I think there's a better way to do this
-    //Dunno why this needs stateIn
     @OptIn(ExperimentalCoroutinesApi::class)
     private var notes = isSortedByDate.flatMapLatest { sort ->
         if (sort) {
@@ -138,11 +132,11 @@ class NotesViewModel(private val dao: NoteDao) : ViewModel() {
                     year = year,
                     genre = "unknown",//todo remove
                     content = content,
-                    imagePath = imagePath, //todo save image url - req different rendering method
+                    imagePath = imagePath,
                     lastModified = System.currentTimeMillis()
                 )
                 viewModelScope.launch {
-                    state.value.id = dao.upsertNote(note)
+                    dao.upsertNote(note)
                 }
                 //resets state after saving note
                 _state.update {
