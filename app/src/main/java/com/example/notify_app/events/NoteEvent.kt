@@ -1,5 +1,6 @@
 package com.example.notify_app.events
 
+import com.example.notify_app.api.data.Track
 import com.example.notify_app.data.Note
 
 sealed interface NoteEvent {
@@ -15,6 +16,10 @@ sealed interface NoteEvent {
 //    data class SetYear(val year: String): NoteEvent
 //    data class SetGenre(val genre: String): NoteEvent
     data class SetContent(val content: String): NoteEvent
+
+    data class SelectTrack(val track: Track) : NoteEvent
+
+    data class SearchTracks(val query: String) : NoteEvent
 
     //not yet implemented
 //    data class SetSearchQuery(val query: String): NoteEvent

@@ -12,6 +12,4 @@ interface SpotifyAuthApi {
         @Field("grant_type") grantType: String = "client_credentials"
     ): Response<TokenResponse>
 
-
-
 }

@@ -1,14 +1,11 @@
 package com.example.notify_app.api
 
-import com.example.notify_app.BuildConfig
 import okhttp3.Interceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object RetrofitInstance {
+object SpotifyInstance {
     private const val BASE_URL = "https://api.spotify.com/"
-    val clientId = BuildConfig.SPOTIFY_CLIENT_ID
-    val clientSecret = BuildConfig.SPOTIFY_CLIENT_SECRET
 
     fun create(authToken: String): SpotifyApi {
         //create interceptor to add auth token to each request
